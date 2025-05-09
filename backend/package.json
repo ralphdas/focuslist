@@ -1,7 +1,7 @@
 {
   "name": "hello-world",
   "scripts": {
-    "dev": "wrangler dev",
+    "dev": "concurrently \"npx localtunnel --port 8787\" \"wrangler dev\"",
     "deploy": "wrangler deploy --minify"
   },
   "dependencies": {
@@ -15,6 +15,8 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250214.0",
     "@types/node": "^22.15.3",
+    "concurrently": "^9.1.2",
+    "localtunnel": "^2.0.2",
     "wrangler": "^4.2.0"
   }
 }
