@@ -21,62 +21,12 @@ type apiContext = Context<HonoBindings>;
 const api = new Hono<HonoBindings>();
 const app = new Hono<HonoBindings>();
 
-const verifyTokenHandler = async (c: apiContext) => {
-  const token = c.req.header("Authorization")?.split(" ")[1];
-  if (!token) {
-    return c.text("Authorization token not found", 401);
-  }
-  const secretKey = (c.env as Cloudflare.Env).CLERK_SECRET_KEY;
-  const verifiedToken = await verifyToken(token, {
-    secretKey,
-  });
-  if (!verifiedToken) {
-    return c.text("Invalid token", 401);
-  } else {
-    return c.json(verifiedToken, 200);
-  }
-};
-
-const clerkWebhookHandler = async (c: apiContext) => {
-  const payload = await c.req.json<UserWebhookEvent>();
-  const eventType = payload.type;
-
-  if (eventType !== "user.created") {
-    return c.text("Event not handled", 400);
-  }
-
-  const { id: clerk_id, first_name, last_name } = payload.data;
-
-  const username = payload.data.username || `${first_name} ${last_name}`;
-
-  if (!username) {
-    return c.text("Invalid user data", 400);
-  }
-
-  const db = createDbClient(c.env.DB);
-
-  try {
-    await db
-      .insertInto("users")
-      .values({
-        username,
-        clerk_id,
-      })
-      .execute();
-
-    return c.json({ success: true }, 201);
-  } catch (error) {
-    console.error("Error inserting user:", error);
-    return c.text("Failed to register user", 500);
-  }
-};
-
 const listUsersHandler = async (c: apiContext) => {
   const db = createDbClient(c.env.DB);
 
   const users = await db
     .selectFrom("users")
-    .innerJoin("todos", "users.id", "todos.user_id")
+    .leftJoin("todos", "users.id", "todos.user_id")
     .select(["users.id", "users.username"])
     .select((eb) => eb.fn.count("todos.id").as("todo_count"))
     .groupBy("users.username")
@@ -188,8 +138,6 @@ const toggleTodoStatusHandler = async (c: apiContext) => {
 
 // API Routing
 api.get("/", (c) => c.json({ message: "Todos API" }, 200));
-api.post("/webhooks/clerk", clerkWebhookHandler);
-api.get("/users/verify", verifyTokenHandler);
 api.get("/users", listUsersHandler);
 api.get(":username/todos", validateUsername, listTodosHandler);
 api.post(
