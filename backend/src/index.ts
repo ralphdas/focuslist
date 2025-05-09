@@ -8,6 +8,7 @@ import {
 import { checkIfTodoExists } from "./utils";
 import { D1Database } from "@cloudflare/workers-types";
 import { ClerkClient, createClerkClient, verifyToken } from "@clerk/backend";
+import type { UserWebhookEvent } from "@clerk/backend";
 
 type HonoBindings = {
   Bindings: {
@@ -33,6 +34,40 @@ const verifyTokenHandler = async (c: apiContext) => {
     return c.text("Invalid token", 401);
   } else {
     return c.json(verifiedToken, 200);
+  }
+};
+
+const clerkWebhookHandler = async (c: apiContext) => {
+  const payload = await c.req.json<UserWebhookEvent>();
+  const eventType = payload.type;
+
+  if (eventType !== "user.created") {
+    return c.text("Event not handled", 400);
+  }
+
+  const { id: clerk_id, first_name, last_name } = payload.data;
+
+  const username = payload.data.username || `${first_name} ${last_name}`;
+
+  if (!username) {
+    return c.text("Invalid user data", 400);
+  }
+
+  const db = createDbClient(c.env.DB);
+
+  try {
+    await db
+      .insertInto("users")
+      .values({
+        username,
+        clerk_id,
+      })
+      .execute();
+
+    return c.json({ success: true }, 201);
+  } catch (error) {
+    console.error("Error inserting user:", error);
+    return c.text("Failed to register user", 500);
   }
 };
 
@@ -153,6 +188,7 @@ const toggleTodoStatusHandler = async (c: apiContext) => {
 
 // API Routing
 api.get("/", (c) => c.json({ message: "Todos API" }, 200));
+api.post("/webhooks/clerk", clerkWebhookHandler);
 api.get("/users/verify", verifyTokenHandler);
 api.get("/users", listUsersHandler);
 api.get(":username/todos", validateUsername, listTodosHandler);
