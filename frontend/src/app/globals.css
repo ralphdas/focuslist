@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Base theme variables */
+:root {
+  /* Light mode defaults */
+  --primary-text: hsl(134, 90%, 15%);
+  --inverted-text: hsl(134, 90%, 100%);
+  --primary-bg: hsl(134, 20%, 90%);
+  --elevated-bg: hsl(134, 20%, 95%);
+  --accent: hsl(134, 100%, 15%);
+  --separator: hsl(134, 20%, 80%);
+}
+
+/* Class-based dark mode override */
+.dark {
+  --primary-text: hsl(134, 90%, 98%);
+  --inverted-text: hsl(134, 90%, 15%);
+  --primary-bg: hsl(134, 20%, 15%);
+  --elevated-bg: hsl(134, 20%, 10%);
+  --accent: hsl(134, 100%, 47%);
+  --separator: hsl(134, 20%, 30%);
+}
+
+/* Theme semantic variables */
+@theme {
+  --color-primary: var(--primary-text);
+  --color-separator: var(--separator);
+  --color-base: var(--primary-bg);
+  --color-accent: var(--accent);
+  --color-inverted: var(--inverted-text);
+  --color-elevated: var(--elevated-bg);
+}
+
+@layer components {
+  .text-header {
+    font-family: Avenir, Montserrat, Corbel, source-sans-pro, sans-serif;
+  }
+
+  .text-normal {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+}

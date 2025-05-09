@@ -1,0 +1,65 @@
+"use client";
+import Link from "next/link";
+import DarkModeSwitcher from "./_components/dark-mode-switcher";
+import {
+  SignedOut,
+  SignInButton,
+  SignedIn,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
+import { User } from "lucide-react";
+
+export default function HeaderBar() {
+  const { user } = useUser();
+  return (
+    <div className="flex px-4 py-1 bg-accent text-inverted fixed w-full border-b border-primary/70 shadow-sm">
+      <div className="container mx-auto flex items-center">
+        <Link href="/" className="flex items-center">
+          <span className="flex space-x-2 items-center">
+            <svg
+              width="50"
+              height="41"
+              viewBox="0 0 67 41"
+              fill="none"
+              className="text-inverted drop-shadow-xs drop-shadow-primary/100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M45.0353 4.66318C45.8331 3.77675 46.7195 3.04545 47.6281 2.46927C49.2236 1.47204 50.9079 0.940186 52.6364 0.940186V15.4111C51.3732 11.0233 48.6475 7.25597 45.0353 4.66318ZM66.5533 40.9402H15.2957C6.87461 40.9402 0.0712891 34.1147 0.0712891 25.7158C0.0712891 17.6715 6.3206 11.0676 14.232 10.5136V0.940186C16.0048 0.940186 17.7555 1.44988 19.3954 2.46927C20.304 3.02329 21.1904 3.75459 21.9882 4.59669C25.2458 2.31415 29.1904 0.984507 33.4674 0.984507C33.4674 10.2255 30.1433 20.9735 19.3289 20.9956H33.3566C32.9577 19.2006 31.3178 17.871 29.3677 17.8488H37.5228C35.5727 17.8488 33.9328 19.2006 33.5339 21.0178H46.6087C49.2236 21.0178 51.8164 21.5275 54.2541 22.5469C56.6696 23.5441 58.8857 25.0289 60.725 26.8682C62.5865 28.7297 64.0491 30.9236 65.0464 33.3391C66.0436 35.7325 66.5533 38.3253 66.5533 40.9402ZM22.8525 10.7796C23.1849 11.6438 24.0713 12.6189 25.3123 13.328C26.5533 14.0372 27.8386 14.3253 28.7472 14.1923C28.4148 13.328 27.5284 12.353 26.2874 11.6438C25.0464 10.9347 23.761 10.6466 22.8525 10.7796ZM41.5117 13.328C40.2707 14.0372 38.9854 14.3253 38.0768 14.1923C38.4092 13.328 39.2957 12.353 40.5367 11.6438C41.7777 10.9347 43.063 10.6466 43.9716 10.7796C43.6613 11.6438 42.7527 12.6189 41.5117 13.328Z"
+                fill="currentColor"
+              />
+            </svg>
+            <span className="text-header font-semibold tracking-wider uppercase text text-shadow-sm text-shadow-primary/40">
+              FocusList
+            </span>
+          </span>
+        </Link>
+
+        <span className="flex-1 flex justify-end gap-4">
+          <SignedOut>
+            <SignInButton mode="modal">
+              <div className="flex flex-col items-center justify-center space-y-2">
+                <User width={48} />
+                <span className="text-xs">Login</span>
+              </div>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <div className="flex flex-col items-center justify-center space-y-2">
+              <UserButton
+                appearance={{
+                  elements: {
+                    userButtonAvatarBox: "w-8 h-8",
+                  },
+                }}
+              />
+              <span className="text-xs">{user?.firstName}</span>
+            </div>
+          </SignedIn>
+          <DarkModeSwitcher />
+        </span>
+      </div>
+    </div>
+  );
+}
