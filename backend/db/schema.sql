@@ -1,28 +1,21 @@
 -- Disable foreign key constraints
 PRAGMA foreign_keys = OFF;
 
-DROP TABLE IF EXISTS `users`;
+-- Drop existing tables
 DROP TABLE IF EXISTS `todos`;
-
--- Create tables
-CREATE TABLE `users` (
-    `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    `username` TEXT NOT NULL,
-    `clerk_id` TEXT NOT NULL UNIQUE
-);
+DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `todos` (
     `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     `title` TEXT NOT NULL,
     `description` TEXT NOT NULL DEFAULT '',
-    `user_id` INTEGER NOT NULL,
-    `status` TEXT NOT NULL DEFAULT 'pending' CHECK(`status` IN ('pending', 'done')),
-    FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+    `clerk_external_id` TEXT NOT NULL,
+    `status` TEXT NOT NULL DEFAULT 'pending' CHECK(`status` IN ('pending', 'done'))
 );
 
 -- Create indexes
 CREATE INDEX `idx_todos_user_id` ON `todos` (`user_id`);
-CREATE INDEX `idx_users_username` ON `users` (`username`);
+CREATE INDEX `idx_todos_clerk_external_id` ON `todos` (`clerk_external_id`);
 
 -- Re-enable foreign key constraints
 PRAGMA foreign_keys = ON;
