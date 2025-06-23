@@ -1,28 +1,31 @@
 "use server";
+import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-import { getURLbasedOnEnv } from "@/utils";
+import { db } from "../../db/dbClient";
 
-export async function addTodo(formData: FormData) {
-  const title = formData.get("title") as string;
-  const description = formData.get("description") as string;
-  const username = formData.get("username") as string;
-
-  const response = await fetch(
-    `${await getURLbasedOnEnv()}/api/${username}/todos`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ title, description }),
-    }
-  );
-
-  console.log("Response from API:", await response.json());
-
-  if (!response.ok) {
-    throw new Error(`Failed to add todo`);
+export async function addTodo(formData: FormData): Promise<void> {
+  const clerkUser = await auth();
+  if (!clerkUser.userId) {
+    throw new Error("User not authenticated");
   }
+
+  const title = formData.get("title");
+  const description = formData.get("description");
+
+  if (typeof title !== "string" || typeof description !== "string") {
+    throw new Error("Invalid form data");
+  }
+
+  await db
+    .insertInto("todos")
+    .values({
+      clerk_external_id: clerkUser.userId,
+      title,
+      description,
+      status: "pending",
+    })
+    .returningAll()
+    .execute();
 
   revalidatePath("/");
 }

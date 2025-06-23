@@ -1,23 +1,13 @@
 "use server";
-import { User } from "@/app/types";
-import { getURLbasedOnEnv } from "@/utils";
+import { db } from "../../db/dbClient";
 
 export async function getUsers() {
-  const response = await fetch(`${await getURLbasedOnEnv()}/api/users`, {
-    method: "GET",
-    cf: {
-      cacheTtl: 60,
-      cacheEverything: true,
-    },
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const results = await db
+    .selectFrom("todos")
+    .innerJoin("users", "todos.user_id", "users.id")
+    .groupBy("users.id")
+    .select(["users.username", db.fn.count("todos.id").as("todoCount")])
+    .execute();
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch users`);
-  }
-
-  const users = <User[]>await response.json();
-  return users;
+  return results;
 }

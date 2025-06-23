@@ -12,14 +12,14 @@ export default async function TodosList({
 }) {
   const { username } = await params;
 
-  const todos = await getTodos(username);
+  const todos = await getTodos();
 
   return (
     <>
       <div className="space-y-2 mb-8">
         <Link
           href="/"
-          className="text-sm text-header uppercase tracking-wide flex font-bold mb-4 max-w-fit rounded-4xl p-2 pr-5 gap-2 items-center bg-primary/0.5 text-primary transition-all outline outline-primary/20 hover:outline-primary transition"
+          className="text-sm text-header uppercase tracking-wide flex font-bold mb-4 max-w-fit rounded-4xl p-2 pr-5 gap-2 items-center bg-primary/0.5 text-primary transition-all outline outline-primary/20 hover:outline-primary"
         >
           <ChevronLeft className="text-primary/40" />
           Back to Home

@@ -1,27 +1,15 @@
 "use server";
-import { Todo } from "@/app/types";
-import { getURLbasedOnEnv } from "@/utils";
 import { auth } from "@clerk/nextjs/server";
+import { db } from "../../db/dbClient";
 
-export async function getTodos(username: string) {
-  const { getToken } = await auth();
-  const token = await getToken();
+export async function getTodos() {
+  const clerkUserId = (await auth()).userId;
 
-  const response = await fetch(
-    `${await getURLbasedOnEnv()}/api/${username}/todos`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const todos = await db
+    .selectFrom("todos")
+    .select(["id", "title", "description", "status"])
+    .where("clerk_external_id", "=", clerkUserId)
+    .execute();
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch todos for user: ${username}`);
-  }
-
-  const todos = <Todo[]>await response.json();
   return todos;
 }

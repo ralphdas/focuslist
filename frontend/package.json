@@ -14,8 +14,11 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
+    "@clerk/backend": "^2.1.0",
     "@clerk/nextjs": "^6.18.1",
     "hono": "^4.7.5",
+    "kysely": "^0.28.2",
+    "kysely-d1": "^0.4.0",
     "lucide-react": "^0.484.0",
     "next": "15.3.0",
     "react": "^19.0.0",
