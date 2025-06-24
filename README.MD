@@ -1,151 +1,36 @@
-# Todos Example Application
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-This repository contains both the **frontend** and **backend** for the Todos Example Application.
+## Getting Started
 
----
+First, run the development server:
 
-## Table of Contents
-
-- [Todos Example Application](#todos-example-application)
-  - [Table of Contents](#table-of-contents)
-  - [Project Structure](#project-structure)
-  - [Frontend](#frontend)
-    - [Getting Started (Frontend)](#getting-started-frontend)
-    - [Scripts (Frontend)](#scripts-frontend)
-    - [Environment Variables (Frontend)](#environment-variables-frontend)
-    - [Deployment (Frontend)](#deployment-frontend)
-  - [Backend](#backend)
-    - [Getting Started (Backend)](#getting-started-backend)
-    - [Scripts (Backend)](#scripts-backend)
-    - [Database](#database)
-    - [Deployment (Backend)](#deployment-backend)
-  - [Learn More](#learn-more)
-
----
-
-## Project Structure
-
-```
-.
-├── backend/
-│   ├── db/
-│   ├── src/
-│   ├── package.json
-│   ├── README.md
-│   ├── tsconfig.json
-│   ├── wrangler.jsonc
-│   └── ...
-└── frontend/
-    ├── public/
-    ├── src/
-    ├── package.json
-    ├── README.md
-    ├── tsconfig.json
-    ├── wrangler.jsonc
-    └── ...
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
----
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Frontend
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-A [Next.js](https://nextjs.org) app (TypeScript) for the Todos UI, deployable to Cloudflare Pages/Workers.
-
-### Getting Started (Frontend)
-
-1. Install dependencies:
-
-   ```bash
-   cd frontend
-   npm install
-   ```
-
-2. Run the development server:
-
-   ```bash
-   npm run dev
-   ```
-
-   Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-### Scripts (Frontend)
-
-- `npm run dev` – Start Next.js dev server
-- `npm run build` – Build for production
-- `npm run start` – Start production server
-- `npm run lint` – Lint code
-- `npm run build:worker` – Build for Cloudflare Worker
-- `npm run deploy` – Deploy to Cloudflare Worker
-
-### Environment Variables (Frontend)
-
-- `.env.development`, `.env.production` – Set environment-specific variables
-- See [`frontend/wrangler.jsonc`](frontend/wrangler.jsonc) for Cloudflare bindings and secrets
-
-### Deployment (Frontend)
-
-- Deploy to Cloudflare Pages/Workers using:
-
-  ```bash
-  npm run build:worker
-  npm run deploy
-  ```
-
----
-
-## Backend
-
-A Cloudflare Worker API using [Hono](https://hono.dev/) and [Kysely](https://kysely.dev/) with a D1 database.
-
-### Getting Started (Backend)
-
-1. Install dependencies:
-
-   ```bash
-   cd backend
-   npm install
-   ```
-
-2. Run the development server:
-
-   ```bash
-   npm run dev
-   ```
-
-### Scripts (Backend)
-
-- `npm run dev` – Start local dev server with Wrangler
-- `npm run deploy` – Deploy to Cloudflare Workers
-
-### Database
-
-- Uses [Cloudflare D1](https://developers.cloudflare.com/d1/).
-- Schema and seed scripts are in [`backend/db/`](backend/db/).
-- To apply schema and seed data:
-
-  ```bash
-  wrangler d1 execute <DB_NAME> --file=db/schema.sql
-  wrangler d1 execute <DB_NAME> --file=db/seed.sql
-  ```
-
-### Deployment (Backend)
-
-- Deploy to Cloudflare Workers with:
-
-  ```bash
-  npm run deploy
-  ```
-
-- See [`backend/wrangler.jsonc`](backend/wrangler.jsonc) for configuration.
-
----
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
 
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers/)
-- [Cloudflare D1 Documentation](https://developers.cloudflare.com/d1/)
-- [Hono Documentation](https://hono.dev/)
-- [Kysely Documentation](https://kysely.dev/)
+To learn more about Next.js, take a look at the following resources:
 
----
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
